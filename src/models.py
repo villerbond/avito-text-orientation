@@ -7,7 +7,7 @@ from torchvision.models import (
 )
 
 class SimpleCNN(nn.Module):
-
+    """Простая CNN (по итогу не использовалась)"""
     def __init__(self):
         super().__init__()
 
@@ -34,6 +34,8 @@ class SimpleCNN(nn.Module):
         return self.classifier(x)
     
 def build_model(name):
+    """Создаёт модель с одним выходом для бинарной классификации"""
+
     if name == "simple_cnn":
         return SimpleCNN()
 

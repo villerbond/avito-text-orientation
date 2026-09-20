@@ -3,6 +3,7 @@ import numpy as np
 import torch
 
 def set_seed(seed: int = 42):
+    """Фиксирует seed для воспроизводимости экспериментов"""
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)

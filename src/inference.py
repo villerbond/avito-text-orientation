@@ -4,6 +4,7 @@ from tqdm.auto import tqdm
 
 @torch.no_grad()
 def predict(model, loader, device):
+    """Получает вероятности класса 1 для тестовых изображений"""
     model.eval()
     image_ids = []
     probabilities = []

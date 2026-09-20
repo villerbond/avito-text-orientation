@@ -7,6 +7,7 @@ import torch.nn as nn
 from pathlib import Path
 
 def train_one_epoch(model, loader, criterion, optimizer, device, epoch, epochs):
+    """Обучает модель одну эпоху"""
 
     model.train()
     running_loss = 0
@@ -30,6 +31,7 @@ def train_one_epoch(model, loader, criterion, optimizer, device, epoch, epochs):
     return running_loss / len(loader)
 
 def validate(model, loader, criterion, device, epoch, epochs):
+    """Вычисляет loss и Brier Score на валидационной выборке"""
 
     model.eval()
 
@@ -65,6 +67,7 @@ def validate(model, loader, criterion, device, epoch, epochs):
     }
 
 def fit_model(model, train_loader, val_loader, optimizer, device, epochs, criterion=None, checkpoint_path=None):
+    """Полный цикл обучения с сохранением лучшей модели (если указана папка)"""
     criterion = criterion or nn.BCEWithLogitsLoss()
     history = []
     best_score = -float("inf")
@@ -87,6 +90,7 @@ def fit_model(model, train_loader, val_loader, optimizer, device, epochs, criter
             "val_score": metrics["score"]
         })
 
+        # Сохраняем модель с лучшим validation score
         if val_score > best_score:
             best_score = val_score
             best_epoch = epoch + 1
@@ -98,6 +102,8 @@ def fit_model(model, train_loader, val_loader, optimizer, device, epochs, criter
     return model, history_df
 
 def plot_results(history_df):
+    """Визуализирует loss и validation score по эпохам"""
+
     plt.figure(figsize=(12, 4))
 
     plt.subplot(1, 2, 1)

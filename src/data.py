@@ -6,11 +6,14 @@ from PIL import Image
 import pandas as pd
 from pathlib import Path
 
+# Размер входного изображения и параметры нормализации ImageNet
 IMAGE_SIZE = (64, 256)
 NORM_MEAN = [0.485, 0.456, 0.406]
 NORM_STD = [0.229, 0.224, 0.225]
 
 def get_train_transform(is_aug, image_size=IMAGE_SIZE):
+    """Возвращает трансформации для обучающих изображений"""
+    # Отдельно с аугментацией и без
     if (is_aug):
         return transforms.Compose([
             transforms.Resize(image_size),
@@ -27,14 +30,15 @@ def get_train_transform(is_aug, image_size=IMAGE_SIZE):
 
 
 def get_val_transform(image_size=IMAGE_SIZE):
+    """Возвращает трансформации для валидации и инференса."""
     return transforms.Compose([
         transforms.Resize(image_size),
         transforms.ToTensor(),
         transforms.Normalize(mean=NORM_MEAN,std=NORM_STD),
 ])
 
-
 class OrientationDataset(Dataset):
+    """Датасет для обучающих данных"""
 
     def __init__(self, image_dir, labels_df, transform=None):
         self.image_dir = image_dir
@@ -63,6 +67,7 @@ def build_dataloaders(
     num_workers = 2,
     is_aug = False
 ):
+    """Создаёт DataLoader для train и validation"""
     train_labels = pd.read_csv(train_dir / "labels.csv")
     val_labels = pd.read_csv(val_dir / "labels.csv")
 
@@ -80,6 +85,7 @@ def build_dataloaders(
     return train_loader, val_loader
 
 class InferenceDataset(Dataset):
+    """Датасет для тестовых данных"""
     def __init__(self, image_paths: list[Path], transform=None):
         self.image_paths = image_paths
         self.transform = transform
@@ -92,10 +98,12 @@ class InferenceDataset(Dataset):
         image = Image.open(path).convert("RGB")
         if self.transform:
             image = self.transform(image)
+        # Используем имя файла как идентификатор изображения
         image_id = path.stem
         return image, image_id
 
 def build_test_loader(test_images_dir: Path, batch_size: int = 128, num_workers: int = 2):
+    """Создаёт DataLoader для тестовых изображений."""
     image_paths = sorted(test_images_dir.glob("*.png")) + sorted(test_images_dir.glob("*.jpg"))
     dataset = InferenceDataset(image_paths, transform=get_val_transform())
     loader = DataLoader(
