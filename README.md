@@ -14,6 +14,7 @@ avito-text-orientation/
 │   ├── inference.py     # Функции предсказания
 │   └── utils.py         # Вспомогательные функции
 ├── data/                # Папка для данных
+├── checkpoints/         # Папка для лучшей модели
 ├── notebooks/
 │   ├── 01_eda_and_data_prep.ipynb         # ноутбук для работы с данными
 │   ├── 02_training_and_experiments.ipynb  # ноутбук для обучения моедлей и экспериментов
