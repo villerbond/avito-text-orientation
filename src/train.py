@@ -93,7 +93,7 @@ def fit_model(model, train_loader, val_loader, optimizer, device, epochs, criter
             if checkpoint_path is not None:
                 torch.save(model.state_dict(), checkpoint_path)
 
-
+    print(f"The best model from epoch {best_epoch} with score = {best_score:.4f}")
     history_df = pd.DataFrame(history)
     return model, history_df
 
